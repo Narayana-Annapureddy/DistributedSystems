@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  servicename:
+    build: ./Server # Path to the Dockerfile
+    image: flaskserver1
+    container_name: server1
+    ports:
+      - "127.0.0.1:5000:5000" # Exposing port to host
+    privileged: true # This should be true to share the docker daemon
+  
+    environment:
+      server_id: 100 # Environment variables accessed with os.environ[’VAR1’].
+      no_of_servers: 3
+
+ 
