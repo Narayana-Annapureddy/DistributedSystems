@@ -1,3 +1,38 @@
+from flask import Flask
+from flask import jsonify, request,redirect,url_for
+import os
+import ast
+import subprocess
+ 
+app = Flask(__name__)
+app.config.from_object('config.Config')
+ 
+@app.route("/rep",methods = ["GET"])
+def rep():
+    try:
+            result = subprocess.run(["python","Helper.py",],stdout=subprocess.PIPE, text=True, check=True)
+            print(result)
+            replicas = result.stdout.splitlines()
+            # if()
+            # print(result)
+    except:
+        msg = {
+        "message":"<Error>  Unable to remove some container(s)",
+        "status" : "Faliure"
+        }
+        return jsonify(msg),400
+    print(replicas)
+    app.config['REPLICAS'] = replicas
+    app.config["N"] = len(replicas)
+    msg = {
+        "message":
+        {           
+            "N" : app.config["N"],
+            "replicas" :  app.config["REPLICAS"]
+        },
+        "status" : "Successful"
+    }
+    return jsonify(msg),200
 
 @app.route("/rem",methods = ["POST"])
 def rem():
