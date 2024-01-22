@@ -34,7 +34,58 @@ def rep():
     }
     return jsonify(msg),200
 
+@app.route("/add",methods = ["POST"])
+def add():
+    try:
+        servers = ast.literal_eval(request.args['replicas'])
+    except:
+        msg = {
+                "message":"<Error> Unable to create some container(s)",
+                "status" : "Faliure"
+                }
+        return jsonify(msg),400
+   
+    n = int(request.args['n'])
+    if(n<len(servers)):
+        msg = {
+        "message":"<Error> Length of hostname list is more than newly added instances",
+        "status" : "Faliure"
+        }
+        return jsonify(msg),400
+    elif(n>len(servers)):
+        msg = {
+        "message":"<Error> Length of hostname list is less than newly added instances",
+        "status" : "Faliure"
+        }
+        return jsonify(msg),400
+ 
+    for i in servers:
+        try:
+            result = subprocess.run(["python","Helper.py",str(i),"distributedsystems_net1","loadbalancer","add"],stdout=subprocess.PIPE, text=True, check=True)
+           
+        except:
+            msg = {
+                "message":"<Error> Unable to create some container(s)",
+                "status" : "Faliure"
+                }
+            return jsonify(msg),400
+           
+    #add here
+    return redirect(url_for("rep"))
+    # msg = {
+    #     "message":
+    #     {
+           
+    #         "N" : app.config["N"],
+    #         "replicas" : app.config['REPLICAS']
+    #     },
+    #     "status" : "Successful"
+    # }
+    # return jsonify(msg),200
+
+
 @app.route("/rem",methods = ["POST"])
+
 def rem():
     try:
         servers = ast.literal_eval(request.args['replicas'])
