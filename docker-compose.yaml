@@ -1,15 +1,72 @@
 version: "3.9"
 services:
-  servicename:
+  service_loadbalancer:
+    build: ./LoadBalancer # Path to the Dockerfile
+    image: loadbalancer
+    container_name: lbserver1
+    ports:
+      - "5000:5000" # Exposing port to host
+    privileged: true # This should be true to share the docker daemon
+    networks:
+      net1:
+        aliases:
+          - lbserver1
+
+  service_server1:
     build: ./Server # Path to the Dockerfile
     image: flaskserver1
     container_name: server1
+    depends_on:
+      - service_loadbalancer
     ports:
-      - "127.0.0.1:5000:5000" # Exposing port to host
-    privileged: true # This should be true to share the docker daemon
-  
+      - "5001:5000" # Exposing port to host
+    
+    networks:
+      net1:
+        aliases:
+          - server1
+
     environment:
       server_id: 100 # Environment variables accessed with os.environ[’VAR1’].
       no_of_servers: 3
+
+  service_server2:
+    build: ./Server # Path to the Dockerfile
+    image: flaskserver1
+    container_name: server2
+    ports:
+      - "5002:5000" # Exposing port to host
+    depends_on:
+      - service_loadbalancer
+    networks:
+      net1:
+        aliases:
+          - server2
+    environment:
+      server_id: 100 # Environment variables accessed with os.environ[’VAR1’].
+      no_of_servers: 3
+  
+  service_server3:
+    build: ./Server # Path to the Dockerfile
+    image: flaskserver1
+    container_name: server3
+    ports:
+      - "5003:5000" # Exposing port to host
+    depends_on:
+      - service_loadbalancer
+    networks:
+      net1:
+        aliases:
+          - server3
+    environment:
+      server_id: 100 # Environment variables accessed with os.environ[’VAR1’].
+      no_of_servers: 3
+  
+  
+    
+networks:
+  net1: 
+    driver: bridge
+
 
  
