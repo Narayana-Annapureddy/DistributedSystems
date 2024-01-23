@@ -1,20 +1,17 @@
-FROM  python:3.10-slim 
 
+FROM  python:3.10-slim 
 COPY . /LoadBalancer
 
 WORKDIR /LoadBalancer
-EXPOSE 5000     
-# COPY requirements.txt .
-
-# RUN --mount=type=cache,target=/root/.cache/pip \
-#     pip3 install -r requirements.txt
-
-# RUN --mount=type=cache,target=/root/.cache/pip \
-#     pip3 install -r requirements.txt
 
 ENV server_id = 1
-RUN pip install --trusted-host pypi.python.org flask
+RUN apt-get update
+RUN apt-get -y install sudo
 
-
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install -y docker.io
+RUN apt-get update
+EXPOSE 5000
 # run pip install flask
 CMD ["python","App.py"]
