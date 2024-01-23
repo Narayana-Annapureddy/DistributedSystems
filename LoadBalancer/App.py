@@ -1,12 +1,13 @@
 from flask import Flask
 from flask import jsonify, request,redirect,url_for
-import os
+import os 
 import ast
 import subprocess
- 
+
+
 app = Flask(__name__)
 app.config.from_object('config.Config')
- 
+
 @app.route("/rep",methods = ["GET"])
 def rep():
     try:
@@ -26,13 +27,15 @@ def rep():
     app.config["N"] = len(replicas)
     msg = {
         "message":
-        {           
+        {
+            
             "N" : app.config["N"],
             "replicas" :  app.config["REPLICAS"]
         },
         "status" : "Successful"
     }
     return jsonify(msg),200
+
 
 @app.route("/add",methods = ["POST"])
 def add():
@@ -44,7 +47,7 @@ def add():
                 "status" : "Faliure"
                 }
         return jsonify(msg),400
-   
+    
     n = int(request.args['n'])
     if(n<len(servers)):
         msg = {
@@ -58,31 +61,30 @@ def add():
         "status" : "Faliure"
         }
         return jsonify(msg),400
- 
+
     for i in servers:
         try:
             result = subprocess.run(["python","Helper.py",str(i),"distributedsystems_net1","loadbalancer","add"],stdout=subprocess.PIPE, text=True, check=True)
-           
+            
         except:
             msg = {
                 "message":"<Error> Unable to create some container(s)",
                 "status" : "Faliure"
                 }
             return jsonify(msg),400
-           
+            
     #add here
     return redirect(url_for("rep"))
     # msg = {
     #     "message":
     #     {
-           
+            
     #         "N" : app.config["N"],
     #         "replicas" : app.config['REPLICAS']
     #     },
     #     "status" : "Successful"
     # }
     # return jsonify(msg),200
-
 
 @app.route("/rem",methods = ["POST"])
 

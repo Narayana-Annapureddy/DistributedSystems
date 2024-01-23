@@ -4,6 +4,8 @@ services:
     build: ./LoadBalancer # Path to the Dockerfile
     image: loadbalancer
     container_name: lbserver1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "5000:5000" # Exposing port to host
     privileged: true # This should be true to share the docker daemon

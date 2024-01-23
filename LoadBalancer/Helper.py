@@ -1,6 +1,6 @@
 import subprocess
 import sys
-
+import docker 
 def main1(params):
    
     cmd = ["docker", "run", "--name", params[1],"--network", params[2], "--network-alias", params[1], "-d",params[3]]
