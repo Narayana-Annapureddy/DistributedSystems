@@ -30,7 +30,7 @@ def main2(params):
 def get_docker_processes():
     try:
         # Run the docker ps command with custom formatting
-        result = subprocess.run(["docker", "ps", "--format", '{{.Names}}'], capture_output=True, text=True, check=True)
+        result = subprocess.run(["docker", "ps","--filter", "ancestor=flaskserver1", "--format",'{{.Names}}'], capture_output=True, text=True, check=True)
 
         # Extract container names from the output
         container_names = result.stdout.splitlines()

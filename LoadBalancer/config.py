@@ -1,4 +1,4 @@
 class Config:
-    N = 3
-    REPLICAS = ["server1","server2","server3"]
+    N = 0
+    REPLICAS = {}
     
