@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  service_loadbalancer:
+  LoadBalancer:
     build: ./LoadBalancer # Path to the Dockerfile
     image: loadbalancer
     container_name: lbserver1
@@ -19,7 +19,7 @@ services:
     image: flaskserver1
     container_name: server1
     depends_on:
-      - service_loadbalancer
+      - LoadBalancer
     ports:
       - "5001:5000" # Exposing port to host
     
@@ -39,7 +39,7 @@ services:
     ports:
       - "5002:5000" # Exposing port to host
     depends_on:
-      - service_loadbalancer
+      - LoadBalancer
     networks:
       net1:
         aliases:
@@ -55,7 +55,7 @@ services:
     ports:
       - "5003:5000" # Exposing port to host
     depends_on:
-      - service_loadbalancer
+      - LoadBalancer
     networks:
       net1:
         aliases:

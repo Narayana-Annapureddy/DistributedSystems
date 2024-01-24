@@ -2,6 +2,7 @@ from flask import Flask
 from flask import jsonify, request,redirect,url_for
 import os 
 import ast
+import requests
 import subprocess
 
 
@@ -64,7 +65,7 @@ def add():
 
     for i in servers:
         try:
-            result = subprocess.run(["python","Helper.py",str(i),"distributedsystems_net1","loadbalancer","add"],stdout=subprocess.PIPE, text=True, check=True)
+            result = subprocess.run(["python","Helper.py",str(i),"distributedsystems_net1","flaskserver1","add"],stdout=subprocess.PIPE, text=True, check=True)
             
         except:
             msg = {
@@ -96,7 +97,7 @@ def rem():
             "message":"<Error>  Unable to remove some container(s)",
             "status" : "Faliure"
             }
-        return jsonify(msg),400
+        return jsonify(msg),400 
     n = int(request.args['n'])
     if(n<len(servers)):
         msg = {
@@ -134,8 +135,22 @@ def rem():
     # }
     # return jsonify(msg),200
 
+@app.route("/<path>",methods = ["GET"])
+def pathRoute1(path):
+    #loadbalancer should be implemented here
+    # server_name = loadbalancer()
+    server_name = "s21"
+    target_url = f'server1/{path}'
+    response = requests.get(f'http://{server_name}:5000/home/{server_name}')
+    return jsonify(response.json())
+    # return "HI"
+    # return redirect(url_for(target_url))
+    # return "hi"
 
 
+
+    # return redirect(url_for(target_url))
+    # return "hi"
 @app.errorhandler(404)
 
 def errorPage(k):

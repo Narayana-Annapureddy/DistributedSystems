@@ -1,2 +1,0 @@
-server1
-lbserver1
