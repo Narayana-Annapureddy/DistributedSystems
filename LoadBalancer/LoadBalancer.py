@@ -1,9 +1,10 @@
 import math
  
 class ConsistentHashing:
+
  
     def __init__(self):
- 
+
         # parameters
         self.num_slots = 512
         self.dic = {}  # to maintain server names and it's number

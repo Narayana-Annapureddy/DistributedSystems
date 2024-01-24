@@ -12,7 +12,9 @@ app = Flask(__name__)
 app.config.from_object('config.Config')
 obj = lb.ConsistentHashing()
 
+
 # resposes all the replicas of the servers
+
 
 @app.route("/rep",methods = ["GET"])
 def rep():
@@ -145,7 +147,7 @@ def rem():
 
 @app.route("/<path>",methods = ["GET"])
 def pathRoute1(path):
-    
+
     #assigning uuid to each request
     # max_value = 10**(6) - 1
     # request_id = uuid.uuid4().int % max_value
@@ -165,6 +167,20 @@ def pathRoute1(path):
         else:
             break
         temp-=1
+    response = requests.get(f'http://{server_name}:5000/home/{server_name}')
+    return jsonify(response.json())
+
+    #loadbalancer should be implemented here
+    # server_name = loadbalancer()
+    max_value = 10**(6) - 1
+    request_id = uuid.uuid4().int % max_value
+    server_id = obj.req_server(request_id)
+    for i,j in obj.dic.items():
+        if(j==server_id):
+            server_name = i
+            break
+    
+    #checkheartbeat
     response = requests.get(f'http://{server_name}:5000/home/{server_name}')
     return jsonify(response.json())
 
