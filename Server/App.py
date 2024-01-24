@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 @app.route("/",methods = ["GET"])
 @app.route("/home",methods = ["GET"])
+
 def hello_world():
     
     server_id = os.environ.get('server_id')
@@ -16,6 +17,13 @@ def hello_world():
     }
     return jsonify(msg),200
 
+@app.route("/home/<server_id>",methods = ["GET"])
+def home(server_id):
+    msg = {
+        "message": f"Hello, From Server {server_id}",
+        "status" : "Successful"
+    }
+    return jsonify(msg)
 @app.errorhandler(404)
 
 def errorPage(k):
