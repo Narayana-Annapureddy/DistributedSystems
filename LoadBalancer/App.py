@@ -4,10 +4,12 @@ import os
 import ast
 import requests
 import subprocess
-
+import LoadBalancer as lb
+import uuid
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
+obj = lb.ConsistentHashing()
 
 @app.route("/rep",methods = ["GET"])
 def rep():
@@ -37,6 +39,7 @@ def rep():
     }
     return jsonify(msg),200
 
+#add servers based on the request
 
 @app.route("/add",methods = ["POST"])
 def add():
@@ -57,16 +60,23 @@ def add():
         }
         return jsonify(msg),400
     elif(n>len(servers)):
-        msg = {
-        "message":"<Error> Length of hostname list is less than newly added instances",
-        "status" : "Faliure"
-        }
-        return jsonify(msg),400
+        # msg = {
+        # "message":"<Error> Length of hostname list is less than newly added instances",
+        # "status" : "Faliure"
+        # }
+        # return jsonify(msg),400
+        k = n-len(servers)
+        for i in range(k):
+            servers.append("S"+str(obj.N+1+i))
 
     for i in servers:
         try:
             result = subprocess.run(["python","Helper.py",str(i),"distributedsystems_net1","flaskserver1","add"],stdout=subprocess.PIPE, text=True, check=True)
-            
+            if(obj.dic.get(i)==None):
+                obj.N+=1
+                obj.dic[i] = obj.N
+            obj.add_server(obj.dic[i])
+            #implement hashing
         except:
             msg = {
                 "message":"<Error> Unable to create some container(s)",
@@ -115,6 +125,8 @@ def rem():
     for i in servers:
         try:
             result = subprocess.run(["python","Helper.py",str(i),"remove"],stdout=subprocess.PIPE, text=True, check=True)
+            obj.remove_server(obj.dic[i])
+            #implement hashing
         except:
             msg = {
             "message":"<Error>  Unable to remove some container(s)",
@@ -139,22 +151,34 @@ def rem():
 def pathRoute1(path):
     #loadbalancer should be implemented here
     # server_name = loadbalancer()
-    server_name = "s21"
-    target_url = f'server1/{path}'
+    max_value = 10**(6) - 1
+    request_id = uuid.uuid4().int % max_value
+    server_id = obj.req_server(request_id)
+    for i,j in obj.dic.items():
+        if(j==server_id):
+            server_name = i
+            break
+    
+    #checkheartbeat
     response = requests.get(f'http://{server_name}:5000/home/{server_name}')
     return jsonify(response.json())
-    # return "HI"
-    # return redirect(url_for(target_url))
-    # return "hi"
 
 
-
-    # return redirect(url_for(target_url))
-    # return "hi"
 @app.errorhandler(404)
 
 def errorPage(k):
     return "Page not found"
 
 if __name__ == "__main__":
+    for i in ["server1"]:
+        # try:
+        #     result = subprocess.run(["python","Helper.py",str(i),"distributedsystems_net1","flaskserver1","add"],stdout=subprocess.PIPE, text=True, check=True)
+        if(obj.dic.get(i)==None):
+            obj.N+=1
+            obj.dic[i] = obj.N
+        obj.add_server(obj.dic[i])
+            #implement hashing
+        # except:
+        #     pass
+    
     app.run(host = "0.0.0.0",debug = True)
