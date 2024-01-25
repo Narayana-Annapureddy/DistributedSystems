@@ -1,12 +1,11 @@
-# Implementing Load Balancer
+# Implementing Load Balancer 
 
-Load Balancer is a server that routes all the incoming requests to the available servers, so that the load is distributed evenly
-across all the servers. It also increases or decreases the number of servers based on the requirement. Thus availability is ensured.
---------------------------------------------------------------------------------------------------------------------------------
+_Load Balancer is a server that routes all the incoming requests to the available servers, so that the load is distributed evenly across all the servers. It also increases or decreases the number of servers based on the requirement. Thus availability is ensured._
+-----------------------------------------------------------------------------------------------------------------------------
 ### Logic behind the load balancer  ->
 
 
---------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 # Prerequisites
 **1 .Docker version 24.0.7, build afdd53b**
 
@@ -23,6 +22,8 @@ $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev
 sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+-----------------------------------------------------------------------------------------------------------------------------
 
 **2. Docker Compose **
 
