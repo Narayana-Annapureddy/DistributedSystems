@@ -33,7 +33,7 @@ class ConsistentHashing:
     def remove_server(self, i):
        
         for j in range(self.virtual_servers):
- 
+            
             hash = (self.server_mapping(i, j)) % (self.num_slots)
             jump = 1
             # same quadratic probing is used to find all virtual servers of 'i'
