@@ -24,30 +24,43 @@ class ConsistentHashing:
  
         hash = i**2 + j**2 + 2*j + 25
         jump = 1
+        cnt = self.num_slots
         # quadratic probing is used to resolve collision
-        while (self.servers[hash] != None):
+        while (self.servers[hash] != None and cnt):
             hash = (hash + jump**2) % self.num_slots
             jump += 1
+            cnt -= 1
+
+        if (cnt == 0):
+            return None
         return hash
  
     def remove_server(self, i):
        
         for j in range(self.virtual_servers):
- 
             hash = (self.server_mapping(i, j)) % (self.num_slots)
             jump = 1
+            cnt = self.num_slots
             # same quadratic probing is used to find all virtual servers of 'i'
-            while (self.servers[hash] != f"s_{i}_{j}"):
+            while (self.servers[hash] != f"s_{i}_{j}" and cnt):
                 hash = (hash + jump**2) % self.num_slots
                 jump += 1
+                cnt -= 1
+
+            if (cnt == 0):
+                return None
             self.servers[hash] = None
        
  
     def req_server(self, req_id):
  
         hash = (self.request_mapping(req_id)) % (self.num_slots)
-        while (self.servers[hash] == None):
+        cnt = self.num_slots
+        while (self.servers[hash] == None and cnt):
             hash = (hash+1) % (self.num_slots)
+            cnt -= 1
+        if (cnt == 0):
+            return None
            
         # The hash value represents the server_id of the server
         # Now extract the true server number and return it.
