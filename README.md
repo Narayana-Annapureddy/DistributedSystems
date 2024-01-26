@@ -37,10 +37,16 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 # How to run the application
 
 1. make run
+   
     --> this runs 'docker compose up' run command, which will build images for both the loadbalancer and flaskserver, and one container for each of them (lbserver1, server1)
+   
     --> this will run in a detached mode. To exit press ctrl+c
+   
 2. make stop
+   
     --> this command removes all the containers and images created previously
+   
     --> ## It is recommended to run this command for smooth working of the application ##
+   
 
 
