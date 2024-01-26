@@ -64,11 +64,7 @@ def add():
         }
         return jsonify(msg),400
     elif(n>len(servers)):
-        # msg = {
-        # "message":"<Error> Length of hostname list is less than newly added instances",
-        # "status" : "Faliure"
-        # }
-        # return jsonify(msg),400
+        
         k = n-len(servers)
         for i in range(k):
             servers.append("S"+str(obj.N+1+i))
@@ -90,16 +86,7 @@ def add():
             
     #add here
     return redirect(url_for("rep"))
-    # msg = {
-    #     "message":
-    #     {
-            
-    #         "N" : app.config["N"],
-    #         "replicas" : app.config['REPLICAS']
-    #     },
-    #     "status" : "Successful"
-    # }
-    # return jsonify(msg),200
+    
 
 @app.route("/rem",methods = ["POST"])
 
@@ -149,12 +136,17 @@ def rem():
 def pathRoute1(path):
 
     #assigning uuid to each request
-    # max_value = 10**(6) - 1
-    # request_id = uuid.uuid4().int % max_value
-    request_id =  random.randint(100000,999999)
+    max_value = 10**(6) - 1
+    request_id = uuid.uuid4().int % max_value
     temp = 512
     while(temp>=0):
         server_id = obj.req_server(request_id)
+        if (server_id == None):
+            msg = {
+            "message":"<Error> No servers present..(s)",
+            "status" : "Faliure"
+            }
+            return jsonify(msg),400
         for i,j in obj.dic.items():
             if(j==server_id):
                 server_name = i
@@ -167,20 +159,6 @@ def pathRoute1(path):
         else:
             break
         temp-=1
-    response = requests.get(f'http://{server_name}:5000/home/{server_name}')
-    return jsonify(response.json())
-
-    #loadbalancer should be implemented here
-    # server_name = loadbalancer()
-    max_value = 10**(6) - 1
-    request_id = uuid.uuid4().int % max_value
-    server_id = obj.req_server(request_id)
-    for i,j in obj.dic.items():
-        if(j==server_id):
-            server_name = i
-            break
-    
-    #checkheartbeat
     response = requests.get(f'http://{server_name}:5000/home/{server_name}')
     return jsonify(response.json())
 
