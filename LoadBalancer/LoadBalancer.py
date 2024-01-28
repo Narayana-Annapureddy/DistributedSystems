@@ -43,8 +43,7 @@ class ConsistentHashing:
             cnt = self.num_slots
             # same quadratic probing is used to find all virtual servers of 'i'
             while (self.servers[hash] != f"s_{i}_{j}" and cnt):
-                hash = (hash + jump**2) % self.num_slots
-                jump += 1
+                hash = (hash + 1) % self.num_slots
                 cnt -= 1
 
             if (cnt == 0):
