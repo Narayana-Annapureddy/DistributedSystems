@@ -1,8 +1,7 @@
 # Implementing Load Balancer 
 
 _Load Balancer is a server that routes all the incoming requests to the available servers, so that the load is distributed evenly across all the servers. It also increases or decreases the number of servers based on the requirement. Thus availability is ensured._
------------------------------------------------------------------------------------------------------------------------------
-### Logic behind the load balancer  ->
+
 
 
 -----------------------------------------------------------------------------------------------------------------------------
@@ -48,5 +47,38 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
    
     --> ## It is recommended to run this command for smooth working of the application ##
    
+# Logic
+   ## Load Balancer
 
+
+   ## App.py
+      -> It has 4 endpoints (add, rem, rep, <path>)
+      
+      -> add 
+         is post request which accepts two parameters n, replicas
+         you can send this request using  ** POSTMAN ** using the below request of POST method
+                     http://127.0.0.1:5000/add?n=1&replicas=['s21']
+                     if n > len(replicas) then n-len(replicas) number of random servers are created along with ones mentioned in the request
+                     
+      -> rem
+         is post request which accepts two parameters n, replicas
+         you can send this request using  ** POSTMAN ** using the below request of POST method
+                     http://127.0.0.1:5000/rem?n=1&replicas=['s21']
+                     if n > len(replicas) then n-len(replicas) number of random servers are removed along with ones mentioned in the request
+
+      -> rep 
+         is a GET request with 0 params
+         you can send this request using  ** POSTMAN ** using the below request of GET method
+                     http://127.0.0.1:5000/rep
+                     returns all available servers
+
+      -> home 
+         is a GET request with 0 params
+         you can send this request using  ** POSTMAN ** using the below request of GET method
+                     http://127.0.0.1:5000/home
+                     redirects the request to one of the available servers
+
+                     -> on each request random request id is generated, based on the hashing (given) maps the request to one of the servers
+                     -> heartbeat of that server if checked before mapping the request
+                     -> If the server is down then new server is spawned 
 
