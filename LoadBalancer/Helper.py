@@ -9,10 +9,10 @@ def main1(params):
         result = subprocess.run(cmd)
         print("Return Code:", result.returncode)
         if(result.returncode!=0):
-            raise Exception("Container not created")
+            print("Container not created")
        
-    except:
-        raise Exception("Container not created")
+    except Exception as e:
+        print("Container not created")
 
 def main2(params):
    
@@ -22,10 +22,10 @@ def main2(params):
         result = subprocess.run(cmd)
         print("Return Code:", result.returncode)
         if(result.returncode!=0):
-            raise Exception("Container not created")
+            raise Exception("Container not removed")
        
-    except:
-        raise Exception("Container not created")
+    except Exception as e:
+        raise Exception("Container not removed")
 
 def get_docker_processes():
     try:

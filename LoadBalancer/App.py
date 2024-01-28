@@ -145,6 +145,12 @@ def rem():
 
 @app.route("/<path>",methods = ["GET"])
 def pathRoute1(path):
+    if(path!="home"):
+        msg = {
+            "message":"<Error> Page Not Found",
+            "status" : "Faliure"
+            }
+        return make_response(jsonify(msg),400)
     #assigning uuid to each request
     max_value = 10**(6) - 1
     request_id = uuid.uuid4().int % max_value
@@ -153,8 +159,13 @@ def pathRoute1(path):
         server_id = obj.req_server(request_id)
         # if all the servers goes down then 3 new servers will spawn
         if (server_id == None):
-            res = requests.get("http://127.0.0.1:5000/add?n=3&replicas=[]")
+            obj.N+=1
+            server_name = "Sa1wasd"+str(obj.N)
+            obj.dic[server_name] = obj.N
+            result = subprocess.run(["python","Helper.py",server_name,"distributedsystems_net1","flaskserver1","add"],stdout=subprocess.PIPE, text=True, check=True)
+            obj.add_server(obj.dic[server_name])
             continue
+        
         for i,j in obj.dic.items():
             if(j==server_id):
                 server_name = i
@@ -171,7 +182,7 @@ def pathRoute1(path):
             result = subprocess.run(["python","Helper.py",server_name,"remove"],stdout=subprocess.PIPE, text=True, check=True)
             obj.remove_server(obj.dic[server_name])
             obj.N+=1
-            server_name = str(server_name)+str(obj.N)
+            server_name = "Sa1wasd"+str(obj.N)
             obj.dic[server_name] = obj.N
             result = subprocess.run(["python","Helper.py",server_name,"distributedsystems_net1","flaskserver1","add"],stdout=subprocess.PIPE, text=True, check=True)
             obj.add_server(obj.dic[server_name])

@@ -6,7 +6,7 @@ WORKDIR /LoadBalancer
 
 ENV server_id = 1
 RUN apt-get update
-# RUN apt-get -y install sudo
+RUN apt-get -y install sudo
 
 # RUN pip install --upgrade pip
 RUN pip install -r requirements.txt

@@ -22,7 +22,7 @@ class ConsistentHashing:
    
     def server_mapping(self, i, j):
  
-        hash = i**2 + j**2 + 2*j + 25
+        hash = (i**2 + j**2 + 2*j + 25)%self.num_slots
         jump = 1
         cnt = self.num_slots
         # quadratic probing is used to resolve collision
