@@ -4,6 +4,6 @@ run:
 stop:
 	docker compose down
 	docker rm -f $$(docker ps -aq)
-	docker rmi loadbalancer
-	docker rmi flaskserver1
+	docker rmi -f loadbalancer
+	docker rmi -f flaskserver1
 	

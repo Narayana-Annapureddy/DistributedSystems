@@ -108,12 +108,13 @@ def rem():
         "status" : "Faliure"
         }
         return make_response(jsonify(msg),400)
-    elif(n>len(servers)):
+    elif(n>=len(servers)):
         result = subprocess.run(["python","Helper.py",],stdout=subprocess.PIPE, text=True, check=True)
         replicas = result.stdout.splitlines()
-        if(n>len(replicas)):
+        #print(len(replicas),n, flush=True)
+        if(len(replicas)-n<3):
             msg = {
-            "message":"<Error>  Number of servers to be removed are greated than available servers",
+            "message":"<Error>  Cannot remove servers as the available server count after this operation will be less than 3.",
             "status" : "Faliure"
             }
             return make_response(jsonify(msg),400)
