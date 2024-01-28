@@ -33,23 +33,19 @@ class ConsistentHashing:
 
         if (cnt == 0):
             return None
-        return hash
+        return hash % self.num_slots
  
     def remove_server(self, i):
-        print(i,flush=True)
         for j in range(self.virtual_servers):
             hash = (self.server_mapping(i, j)) % (self.num_slots)
-            jump = 1
             cnt = self.num_slots
             # same quadratic probing is used to find all virtual servers of 'i'
-            while (self.servers[hash] != f"s_{i}_{j}" and cnt>0):
-                hash = (hash+1)% self.num_slots
-                
+            while (self.servers[hash] != f"s_{i}_{j}" and cnt):
+                hash = (hash + 1) % self.num_slots
                 cnt -= 1
             self.servers[hash] = None
             if (cnt == 0):
                 return None
-            
        
  
     def req_server(self, req_id):
