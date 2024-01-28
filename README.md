@@ -53,19 +53,23 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
    It has class which is initialized with number of slots, number of virtual servers, server mapping datastructure ( python list )
    python list is maintained as circular array for consistent hashing.
 
-   --> add server \n
+   --> add server
+   
    To add server we find the server mapping(i, j) where i is the server number, j is the virtual number of that server.
    We repeat for virtual number of server times and mapped that virtual server into server circular array.
 
-   --> server mapping\n
+   --> server mapping
+   
    In server mapping a hash function i**2 + j**2 + 2*j + 25 is used for server map.
    If there is a collision then it is resolved by using linear probing.
 
-   --> remove server\n
+   --> remove server
+   
    In this method all the virtual servers of given server is removed by traversing the circular array k times
    where k is the number of virtual servers.
 
-   --> request server\n
+   --> request server
+   
    In this method the request has to be assigned a server .
    so we use a hash function i**2 + 2*i + 27 to map to server circular table.
    After getting the hash value we traverse circular array in clockwise until we get a server id.
