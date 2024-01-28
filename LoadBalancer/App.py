@@ -21,15 +21,14 @@ def rep():
     try:
             result = subprocess.run(["python","Helper.py",],stdout=subprocess.PIPE, text=True, check=True)
             replicas = result.stdout.splitlines()
-            # if()
-            # print(result)
+            
     except:
         msg = {
         "message":"<Error>  Unable to process your request",
         "status" : "Faliure"
         }
         return jsonify(msg),400
-    print(replicas)
+    
     app.config['REPLICAS'] = replicas
     app.config["N"] = len(replicas)
     msg = {
@@ -87,8 +86,9 @@ def add():
             
     #add here
     return redirect(url_for("rep"))
-    
 
+ 
+# removes servers specified in the request
 @app.route("/rem",methods = ["POST"])
 
 def rem():
@@ -145,19 +145,14 @@ def rem():
 
 @app.route("/<path>",methods = ["GET"])
 def pathRoute1(path):
-
     #assigning uuid to each request
     max_value = 10**(6) - 1
     request_id = uuid.uuid4().int % max_value
     temp = 512
     while(temp>=0):
         server_id = obj.req_server(request_id)
+        # if all the servers goes down then 3 new servers will spawn
         if (server_id == None):
-            # msg = {
-            # "message":"<Error> No servers present..(s)",
-            # "status" : "Faliure"
-            # }
-            # return make_response(jsonify(msg),400)
             res = requests.get("http://127.0.0.1:5000/add?n=3&replicas=[]")
             continue
         for i,j in obj.dic.items():
@@ -169,15 +164,19 @@ def pathRoute1(path):
         
         try:
             res = requests.get(f'http://{server_name}:5000/heartbeat')
-            if(res.status_code==304):
-                obj.remove_server(obj.dic[server_id])
-                continue
-            break
-            # print('Request was successful!')
-        except requests.exceptions.HTTPError as errh:
-            print(f"HTTP Error: {errh}")
+            if(res.status_code==200):
+                break 
+        except Exception as errh:
+           
+            result = subprocess.run(["python","Helper.py",server_name,"remove"],stdout=subprocess.PIPE, text=True, check=True)
+            obj.remove_server(obj.dic[server_name])
+            obj.N+=1
+            server_name = str(server_name)+str(obj.N)
+            obj.dic[server_name] = obj.N
+            result = subprocess.run(["python","Helper.py",server_name,"distributedsystems_net1","flaskserver1","add"],stdout=subprocess.PIPE, text=True, check=True)
+            obj.add_server(obj.dic[server_name])
             
-        
+
         temp-=1
     response = requests.get(f'http://{server_name}:5000/home/{server_name}')
     return make_response(jsonify(response.json()),200)
@@ -189,10 +188,11 @@ def errorPage(k):
     return "Page not found"
 
 if __name__ == "__main__":
+    # 3 replicas of server are maintained
     for i in ["server1","server2","server3"]:
         try:
             result = subprocess.run(["python","Helper.py",str(i),"distributedsystems_net1","flaskserver1","add"],stdout=subprocess.PIPE, text=True, check=True)
-        except:
+        except Exception as e:
             pass
         if(obj.dic.get(i)==None):
             obj.N+=1

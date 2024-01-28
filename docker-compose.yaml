@@ -31,10 +31,6 @@ services:
     environment:
       server_id: 100 # Environment variables accessed with os.environ[’VAR1’].
       no_of_servers: 1
-  
-  
-  
-  
     
 networks:
   net1: 
