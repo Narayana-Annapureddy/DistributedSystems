@@ -28,18 +28,18 @@ class ConsistentHashing:
         while (self.servers[hash] != None):
             hash = (hash + jump**2) % self.num_slots
             jump += 1
-        return hash
+        return hash%self.num_slots
  
     def remove_server(self, i):
        
         for j in range(self.virtual_servers):
  
             hash = (self.server_mapping(i, j)) % (self.num_slots)
-            jump = 1
+            
             # same quadratic probing is used to find all virtual servers of 'i'
             while (self.servers[hash] != f"s_{i}_{j}"):
-                hash = (hash + jump**2) % self.num_slots
-                jump += 1
+                hash = (hash + 1) % self.num_slots
+                
             self.servers[hash] = None
        
  
