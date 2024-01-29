@@ -92,13 +92,13 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
                      if n > len(replicas) then n-len(replicas) number of random servers are removed along with ones mentioned in the request
 
       -> rep 
-         is a GET request with 0 params
+         is a GET request
          you can send this request using  ** POSTMAN ** using the below request of GET method
                      http://127.0.0.1:5000/rep
                      returns all available servers
 
-      -> home 
-         is a GET request with 0 params
+      -> <path>
+         is a GET request
          you can send this request using  ** POSTMAN ** using the below request of GET method
                      http://127.0.0.1:5000/home
                      redirects the request to one of the available servers
